@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Additor</title>
+    <link href="main.css" rel="stylesheet">
+  </head>
+  <body>
+    <div id="wrapper">
+      <webview
+          id="main_view"
+          src="https://app.additor.io/">
+      </webview>
+    </div>
+
+  <script>
+      const { shell } = require('electron')
+      const webview = document.querySelector('webview')
+
+      webview.addEventListener('new-window', (e) => {
+        // handle google login -> inside app
+        if (e.url.startsWith('https://app.additor.io/auth/google/login')) {
+          location.href = e.url;
+        }
+        // handle other url -> external browser
+        const protocol = require('url').parse(e.url).protocol;
+        if (protocol === 'http:' || protocol === 'https:') {
+          shell.openExternal(e.url)
+        }
+      })
+    </script>
+  </body>
+</html>
